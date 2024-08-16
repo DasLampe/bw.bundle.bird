@@ -22,5 +22,6 @@ protocol bgp {{ peer }} {
     neighbor {{ cfg.get('ip') }} as {{ cfg.get('as') }};
     export {{ cfg.get('export') }};
     import {{ cfg.get('import') }};
+    password "{{ cfg.get('password') }}";
 }
 {%  endfor %}

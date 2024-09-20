@@ -10,6 +10,14 @@ protocol kernel {
 protocol device {
 }
 
+{% if protocols.get('static', []) -%}
+protocol static {
+    {% for entry in protocols.get('static') -%}
+    {{ entry }}
+    {% endfor %}
+}
+{% endif %}
+
 {% for name, cfg in protocols.get('direct', {}).items() %}
 protocol direct {{ name }}{
     interface "{{ cfg.get('interface') }}";

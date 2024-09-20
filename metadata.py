@@ -25,3 +25,15 @@ def set_default_bgp_password(metadata):
 
     return return_dict
 
+@metadata_reactor
+def iptable_rules(metadata):
+    if not node.has_bundle('iptables'):
+        raise DoNotRunAgain
+
+    rules = {}
+    for bgppeer, peerconfig in metadata.get('bird/protocols/bgp').items():
+        if peerconfig.get('import', 'none') !=  'none':
+            rules += repo.libs.iptables.accept().chain('INPUT').source(peerconfig.get('ip')).dest_port('179').protocol('tcp')
+            rules += repo.libs.iptables.accept().chain('OUTPUT').destination(peerconfig.get('ip')).dest_port('179').protocol('tcp')
+
+    return rules
